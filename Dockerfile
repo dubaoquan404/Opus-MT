@@ -2,13 +2,13 @@
 # image to build Marian and the required Python modules, then copy the built
 # artifacts into a much smaller final image.
 
-FROM debian:10 as builder
+FROM debian:buster as builder
 
 WORKDIR /usr/src/app
 
 # Install base packages
 RUN set -eux; \
-	sh -c 'echo deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free > /etc/apt/sources.list.d/buster-backports.list'; \
+	sh -c 'echo deb http://mirrors.163.com/debian/ buster-backports main contrib non-free > /etc/apt/sources.list.d/buster-backports.list'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		ca-certificates git wget gnupg build-essential lsb-release g++ \
