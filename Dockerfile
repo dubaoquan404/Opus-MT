@@ -10,12 +10,7 @@ WORKDIR /usr/src/app
 RUN set -eux; \
     sh -c 'echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/buster-backports.list'; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		ca-certificates git wget gnupg build-essential lsb-release g++ \
-		automake autogen libtool cmake-data cmake unzip \
-		libboost-all-dev libblas-dev libopenblas-dev libz-dev libssl-dev \
-		libprotobuf23 protobuf-compiler libprotobuf-dev \
-		python3-dev python3-pip python3-setuptools python3-websocket python3-venv;
+	apt-get install -y --no-install-recommends ca-certificates git wget gnupg build-essential lsb-release g++ automake autogen libtool cmake-data cmake unzip libboost-all-dev libblas-dev libopenblas-dev libz-dev libssl-dev libprotobuf23 protobuf-compiler libprotobuf-dev python3-dev python3-pip python3-setuptools python3-websocket python3-venv;
 
 # Install Intel libraries
 RUN set -eux; \
