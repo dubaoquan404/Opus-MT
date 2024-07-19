@@ -7,14 +7,12 @@ FROM debian:buster as builder
 WORKDIR /usr/src/app
 
 # Install base packages
-RUN set -eux; \
-    sh -c 'echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/buster-backports.list'; \
+RUN sh -c 'echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/buster-backports.list'; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends ca-certificates git wget gnupg build-essential lsb-release g++ automake autogen libtool cmake-data cmake unzip libboost-all-dev libblas-dev libopenblas-dev libz-dev libssl-dev libprotobuf23 protobuf-compiler libprotobuf-dev python3-dev python3-pip python3-setuptools python3-websocket python3-venv;
 
 # Install Intel libraries
-RUN set -eux; \
-	wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB; \
+RUN  wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB; \
 	apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB; \
 	sh -c 'echo deb https://apt.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list';\
 	apt-get update; \
@@ -25,8 +23,7 @@ RUN set -eux; \
 
 # Build Marian, using static libraries so we can simply pluck the compiled
 # marian-server out later
-RUN set -eux; \
-	git clone https://github.com/marian-nmt/marian marian; \
+RUN  git clone https://github.com/marian-nmt/marian marian; \
 	cd marian; \
 	git checkout 1.9.0; \
 	cmake . -DUSE_STATIC_LIBS=on -DCOMPILE_SERVER=on -DUSE_SENTENCEPIECE=on -DCOMPILE_CPU=on -DCOMPILE_CUDA=off;  \
@@ -37,8 +34,7 @@ COPY requirements.txt .
 # Install python requirements.  First we upgrade to the latest pip so it can
 # support "manylinux2014" binary wheels.
 
-RUN set -eux; \
-        python3 -mvenv venv ; venv/bin/pip install --upgrade pip ; \
+RUN python3 -mvenv venv ; venv/bin/pip install --upgrade pip ; \
 	venv/bin/pip install -r requirements.txt
 
 
@@ -56,8 +52,7 @@ COPY --from=builder /usr/src/app/venv /usr/src/app/venv/
 # Install perl modules required by moses, and fix up the venv as python is
 # in a different place in the "python" base image compared to where apt
 # installs it in debian:stable
-RUN set -ex ; \
-	apt-get update; \
+RUN  apt-get update; \
 	apt-get install -y --no-install-recommends perl ; \
         rm -rf /var/lib/apt/lists/* ; \
         ln -sf /usr/local/bin/python3 /usr/src/app/venv/bin/python3
